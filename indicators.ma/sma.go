@@ -1,14 +1,7 @@
 package indicators
 
 import (
-	"errors"
-	"golang/entities"
-)
-
-.ma
-
-import (
-	entities "github.com/autotrend/entities"
+	entities "stud/entities"
 	"errors"
 )
 
@@ -113,20 +106,40 @@ func (i *TSMA) OnTick(trade entities.Trade) error {
 		if i.Low > trade.PrecoUlt{
 			i.Low = trade.PrecoUlt
 		}
-	}
-	var summa float64
-	switch i.SourcePrice{
-	case entities.Open:
-		for j := 1; j<=i.MaPeriod; j++ {
-			open := i.bars[j].Open
-			summa = summa + open
+
+		if len(i.bars) > i.MaPeriod {
+			var summa float64
+			switch i.SourcePrice{
+			case entities.Close:
+				for j := 1; j<=i.MaPeriod; j++{
+					close := i.bars[j].Close
+					summa = summa + close
+
+				}
+			case entities.Low:
+				for j := 1; j<=i.MaPeriod; j++{
+					low := i.bars[j].Low
+					summa = summa + low
+				}
+			case entities.High:
+				for j := 1; j<= i.MaPeriod; j++{
+					high := i.bars[j].High
+					summa = summa + high
+				}
+			case entities.Open:
+				for j := 1; j <= i.MaPeriod; j++{
+					open := i.bars[j].Open
+					summa = summa + open
+				}
+			}
+			valor := summa/float64(i.MaPeriod)
+			i.SetValue(0,0, valor)
+		} else {
+			i[0][0] = 0
 		}
-	case entities.Low:
-		for j := 1; j<=i.MaPeriod; j++ {
-			low := i.bars[j].Low
-			summa = summa + low
-		}
 	}
+
+
 	return nil
 }
 
