@@ -96,7 +96,6 @@ func (i *TSMA) Init(maPeriod int, sourceprice entities.PriceType) error {
 	return nil
 }
 
-
 func (i *TSMA) OnTick(trade entities.Trade) error {
 	if i.valLastTick != trade.PrecoUlt{
 		i.Close = trade.PrecoUlt
@@ -190,7 +189,6 @@ func (i *TSMA) OnNextBar(bar entities.Bar) error {
 			for j := 1; j <= i.MaPeriod; j++ {
 				// Adding bar's price to the summa
 				close := i.bars[j].Close
-
 				summa = summa + close
 
 			}

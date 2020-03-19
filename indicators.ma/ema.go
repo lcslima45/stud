@@ -1,7 +1,7 @@
-package indicators.ma
+package indicators
 
 import (
-	entities "github.com/autotrend/entities"
+	"stud/entities"
 	"errors"
 )
 
