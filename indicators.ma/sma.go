@@ -135,7 +135,7 @@ func (i *TSMA) OnTick(trade entities.Trade) error {
 			valor := summa/float64(i.MaPeriod)
 			i.SetValue(0,0, valor)
 		} else {
-			i[0][0] = 0
+			i.SetValue(0, 0 ,0)
 		}
 	}
 
@@ -217,7 +217,7 @@ func (i *TSMA) OnNextBar(bar entities.Bar) error {
 		// Checking, if current amount of bars
 		// more, than period of moving average. If it is
 		// then the calculation is possible
-		i.valores[0][0] = 0
+		i.SetValue(0,0,0)
 		return nil
 	}
 
