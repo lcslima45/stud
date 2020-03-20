@@ -1,7 +1,7 @@
 package indicators
 
 import (
-	"stud/entities"
+	entities "stud/entities"
 	"errors"
 )
 
@@ -112,8 +112,7 @@ func (i *TEMA) OnNextBar(bar entities.Bar) error {
 	i.High  = bar.Close
 	i.Close = bar.Close
 	i.valLastTick = bar.Close
-	newBar := entities.Bar{}
-	//verificando se o vetor de valores de i é vazio
+	newBar := entities.Bar{} //verificando se o vetor de valores de i é vazio
 	if len(i.valores) == 0 {
 		i.valores = make([][]float64, 1)
 	}
@@ -125,25 +124,30 @@ func (i *TEMA) OnNextBar(bar entities.Bar) error {
 	}
 
 	i.bars[0] = bar
-	i.bars[0] = append([]entities.Bar{newBar}, i.bars...)
+	i.bars = append([]entities.Bar{newBar}, i.bars...)
 	//se houverem barras suficientes realizar o cálculo da média exponencial
 	var mediaExp float64
 	if len(i.bars) > i.MaPeriod {
 		var novoPreco float64
 		k := 2/float64(i.MaPeriod + 1)
-		prevMediaEx := i.GetValue(0, 1)
+		prevMediaEx, _ := i.GetValue(0, 1)
 
 		switch i.SourcePrice {
 
 		case entities.Open:
 			novoPreco = bar.Open
+			mediaExp = prevMediaEx + k*(novoPreco-prevMediaEx)
 
 		case entities.Low:
 			novoPreco = bar.Low
+			mediaExp = prevMediaEx + k*(novoPreco-prevMediaEx)
 
 		case entities.Close:
 			novoPreco = bar.Close
+			mediaExp = prevMediaEx + k*(novoPreco-prevMediaEx)
+
 		}
+		i.SetValue(0, 0, mediaExp)
 	} else if (len(i.bars)-1) == i.MaPeriod {
 		// calcular Média Simples como base para a Média exponencial base
 		var summa float64
@@ -215,4 +219,5 @@ func (i *TEMA) OnTick(trade entities.Trade) error {
 
 	return nil
 }
+
 
